@@ -16,10 +16,10 @@ type Project struct {
 }
 
 //NewBlankProject creates a new project with as many blank, zero valued initials as possible
-func NewBlankProject() Project {
+func NewBlankProject() *Project {
 	scenetree := newBlankSceneTree()
 	p := Project{"", "", scenetree}
-	return p
+	return &p
 }
 
 /*
@@ -44,14 +44,14 @@ func (p *Project) SaveProject(filename string) error {
 	return ioutil.WriteFile(savepath, []byte(saveData), 0600)
 }
 
-func loadProject(data []byte) (Project, error) {
+func loadProject(data []byte) (*Project, error) {
 	loadedProject := Project{}
 	json.Unmarshal(data, &loadedProject)
-	return loadedProject, nil
+	return &loadedProject, nil
 }
 
 //LoadProjectFile takes a file name, returns a Project object
-func LoadProjectFile(filename string) (Project, error) {
+func LoadProjectFile(filename string) (*Project, error) {
 	d, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return NewBlankProject(), err
@@ -59,24 +59,23 @@ func LoadProjectFile(filename string) (Project, error) {
 	return loadProject(d)
 }
 
-// func FullyLoadProject(filename string) error {
-// 	d, err := ioutil.ReadFile(filename)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	loadedProject := Project{}
-// 	json.Unmarshal(d, &loadedProject)
-// 	fmt.Println(loadedProject.summarize())
-// 	p = &loadedProject
-// 	return nil
-// }
+func (p *Project) AsJson() string {
+	result, _ := json.Marshal(p)
+	output := string(result)
+	return output
+}
 
-// //getScene takes a sceneid string and returns the scene object it refers to.
-// func (p *Project) getScene(id string) scene {
+//getScene takes a sceneid string and returns the scene object it refers to.
+func (p *Project) getScene(id string) *scene {
+	result := p.SceneTree.SceneTable[id]
+	return result
+}
 
-// }
+func (p *Project) GetSceneExport(id string) string {
+	return p.getScene(id).asJson()
+}
 
-// //UpdateScene takes a sceneid string and a scene object, and overwrites the scene with that id with the scene parameter
-// func (p *Project) UpdateScene(id string, scenedata scene) {
-
-// }
+//UpdateScene takes a sceneid string and a scene object, and overwrites the scene with that id with the scene parameter
+func (p *Project) UpdateScene(id string, scenedata scene) {
+	p.SceneTree.SceneTable[id] = &scenedata
+}

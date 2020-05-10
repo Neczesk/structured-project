@@ -1,5 +1,10 @@
 package project
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 type scene struct {
 	Title    string
 	ID       string
@@ -12,4 +17,16 @@ func (s *scene) isLeaf() bool {
 		return true
 	}
 	return false
+}
+
+func (s *scene) summarize() string {
+	return fmt.Sprintf("This scene is called: %s, with ID: %s", s.Title, s.Text)
+}
+
+func (s *scene) asJson() string {
+	result, err := json.Marshal(s)
+	if err != nil {
+		return ""
+	}
+	return string(result)
 }

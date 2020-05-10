@@ -28,5 +28,15 @@ func TestProject(t *testing.T) {
 	}
 	x := NewBlankProject()
 	x, err = LoadProjectFile("/Users/kyle/Documents/toast.project")
-	fmt.Println(x.summarize())
+
+	if x.summarize() != p.summarize() {
+		t.Errorf("Saved and loaded project not the same as original")
+	}
+
+	summary := x.getScene("1")
+	fmt.Println(summary.summarize())
+	s3 := x.SceneTree.newScene("I love", "Antonia")
+	x.SceneTree.AddScene(s2.ID, &s3)
+	x.UpdateScene("1", s3)
+	fmt.Println(x.getScene("1").summarize())
 }
