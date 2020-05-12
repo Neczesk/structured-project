@@ -76,6 +76,13 @@ func (p *Project) GetSceneExport(id string) string {
 }
 
 //UpdateScene takes a sceneid string and a scene object, and overwrites the scene with that id with the scene parameter
-func (p *Project) UpdateScene(id string, scenedata scene) {
+func (p *Project) updateScene(id string, scenedata scene) {
 	p.SceneTree.SceneTable[id] = &scenedata
+}
+
+func (p *Project) UpdateSceneFromJSON(id string, sceneJSON string) {
+
+	newScene := scene{}
+	json.Unmarshal([]byte(sceneJSON), &newScene)
+	p.updateScene(id, newScene)
 }
