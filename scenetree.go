@@ -6,26 +6,56 @@ import (
 )
 
 type sceneTree struct {
-	Root       *scene
-	SceneTable map[string]*scene
-	idCounter  int
+	Root      *scene
+	idCounter int
 }
 
 func newBlankSceneTree() sceneTree {
 	root := scene{"", "", "", make([]*scene, 0)}
-	st := make(map[string]*scene)
-	st["root"] = &root
-	return sceneTree{&root, st, 1}
+	return sceneTree{&root, 1}
 }
 
 func (s *sceneTree) newScene(title, text string) scene {
 	return scene{title, s.generateID(), text, make([]*scene, 0)}
 }
 
-func (s *sceneTree) AddScene(parent string, newScene *scene) {
-	destination := s.SceneTable[parent]
-	destination.Children = append(destination.Children, newScene)
-	s.SceneTable[newScene.ID] = newScene
+func (s *sceneTree) addScene(parent string, newScene *scene) {
+
+}
+
+func (s *sceneTree) findSceneByID(search string) *scene {
+	queue := make([]*scene, 0)
+	queue = append(queue, s.Root)
+	for len(queue) > 0 {
+		nextup := queue[0]
+		queue = queue[1:]
+		if nextup.ID == search {
+			return nextup
+		}
+		if len(nextup.Children) > 0 {
+			for _, child := range nextup.Children {
+				queue = append(queue, child)
+			}
+		}
+	}
+	return nil
+}
+
+func (s *sceneTree) updateSceneByID(target string, scenedata scene) {
+	queue := make([]*scene, 0)
+	queue = append(queue, s.Root)
+	for len(queue) > 0 {
+		nextup := queue[0]
+		queue = queue[1:]
+		if nextup.ID == target {
+			nextup = &scenedata
+		}
+		if len(nextup.Children) > 0 {
+			for _, child := range nextup.Children {
+				queue = append(queue, child)
+			}
+		}
+	}
 }
 
 //CountScenes uses a depth first tree traversal to count all scenes in the current scenetree.

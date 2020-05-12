@@ -1,6 +1,7 @@
 package project
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"testing"
@@ -9,14 +10,14 @@ import (
 func TestProject(t *testing.T) {
 	p := NewBlankProject()
 	s := p.SceneTree.newScene("Hi mom", "Hello mother")
-	p.SceneTree.AddScene("root", &s)
+	p.SceneTree.addScene("root", &s)
 	if p.SceneTree.countScenes() != 1 {
 		t.Errorf("Expected %d scenes, found %d", p.SceneTree.countScenes(), 1)
 	}
 	s1 := p.SceneTree.newScene("I am a new scene", "Hell")
-	p.SceneTree.AddScene(s.ID, &s1)
+	p.SceneTree.addScene(s.ID, &s1)
 	s2 := p.SceneTree.newScene("I am a leaf", "leaf leaf leaf")
-	p.SceneTree.AddScene(s.ID, &s2)
+	p.SceneTree.addScene(s.ID, &s2)
 	err := p.SaveProject("toast.project")
 	d, err := ioutil.ReadFile("/Users/kyle/Documents/toast.project")
 	if err != nil {
@@ -36,7 +37,8 @@ func TestProject(t *testing.T) {
 	summary := x.getScene("1")
 	fmt.Println(summary.summarize())
 	s3 := x.SceneTree.newScene("I love", "Antonia")
-	x.SceneTree.AddScene(s2.ID, &s3)
-	x.UpdateScene("1", s3)
+	x.SceneTree.addScene(s2.ID, &s3)
+	jString, err := json.Marshal(s3)
+	x.UpdateSceneFromJSON("1", string(jString))
 	fmt.Println(x.getScene("1").summarize())
 }

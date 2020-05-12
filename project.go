@@ -67,7 +67,7 @@ func (p *Project) AsJson() string {
 
 //getScene takes a sceneid string and returns the scene object it refers to.
 func (p *Project) getScene(id string) *scene {
-	result := p.SceneTree.SceneTable[id]
+	result := p.SceneTree.findSceneByID(id)
 	return result
 }
 
@@ -75,14 +75,9 @@ func (p *Project) GetSceneExport(id string) string {
 	return p.getScene(id).asJson()
 }
 
-//UpdateScene takes a sceneid string and a scene object, and overwrites the scene with that id with the scene parameter
-func (p *Project) updateScene(id string, scenedata scene) {
-	p.SceneTree.SceneTable[id] = &scenedata
-}
-
 func (p *Project) UpdateSceneFromJSON(id string, sceneJSON string) {
 
 	newScene := scene{}
 	json.Unmarshal([]byte(sceneJSON), &newScene)
-	p.updateScene(id, newScene)
+	p.SceneTree.updateSceneByID(id, newScene)
 }
