@@ -30,3 +30,8 @@ func (s *scene) asJson() string {
 	}
 	return string(result)
 }
+
+func (s *scene) addScene(data *scene) error {
+	s.Children = append(s.Children, data)
+	return nil
+}

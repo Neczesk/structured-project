@@ -19,7 +19,7 @@ func TestProject(t *testing.T) {
 	s2 := p.SceneTree.newScene("I am a leaf", "leaf leaf leaf")
 	p.SceneTree.addScene(s.ID, &s2)
 	err := p.SaveProject("toast.project")
-	d, err := ioutil.ReadFile("/Users/kyle/Documents/toast.project")
+	d, err := ioutil.ReadFile("/home/kyle/Documents/toast.project")
 	if err != nil {
 		t.Errorf("Error reading file")
 	}
@@ -28,12 +28,11 @@ func TestProject(t *testing.T) {
 		t.Errorf("Saved and loaded project not the same as original")
 	}
 	x := NewBlankProject()
-	x, err = LoadProjectFile("/Users/kyle/Documents/toast.project")
+	x, err = LoadProjectFile("/home/kyle/Documents/toast.project")
 
 	if x.summarize() != p.summarize() {
 		t.Errorf("Saved and loaded project not the same as original")
 	}
-	fmt.Println(x.SceneTree.Root.Children[1].ID)
 	fmt.Println(x.summarize())
 	summary := x.getScene("1")
 	if summary != nil {
