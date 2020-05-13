@@ -1,7 +1,6 @@
 package project
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"testing"
@@ -11,8 +10,9 @@ func TestProject(t *testing.T) {
 	p := NewBlankProject()
 	s := p.SceneTree.newScene("Hi mom", "Hello mother")
 	p.SceneTree.addScene("root", &s)
-	if p.SceneTree.countScenes() != 1 {
-		t.Errorf("Expected %d scenes, found %d", p.SceneTree.countScenes(), 1)
+	fmt.Println(p.summarize())
+	if p.SceneTree.countScenes() != 0 {
+		t.Errorf("Expected %d scenes, found %d", 0, p.SceneTree.countScenes())
 	}
 	s1 := p.SceneTree.newScene("I am a new scene", "Hell")
 	p.SceneTree.addScene(s.ID, &s1)
@@ -33,12 +33,18 @@ func TestProject(t *testing.T) {
 	if x.summarize() != p.summarize() {
 		t.Errorf("Saved and loaded project not the same as original")
 	}
-
+	fmt.Println(x.SceneTree.Root.Children[1].ID)
+	fmt.Println(x.summarize())
 	summary := x.getScene("1")
-	fmt.Println(summary.summarize())
-	s3 := x.SceneTree.newScene("I love", "Antonia")
-	x.SceneTree.addScene(s2.ID, &s3)
-	jString, err := json.Marshal(s3)
-	x.UpdateSceneFromJSON("1", string(jString))
-	fmt.Println(x.getScene("1").summarize())
+	if summary != nil {
+		fmt.Println(summary.summarize())
+	} else {
+		t.Error("Returned scene is nil")
+	}
+
+	// s3 := x.SceneTree.newScene("I love", "Antonia")
+	// x.SceneTree.addScene(s2.ID, &s3)
+	// jString, err := json.Marshal(s3)
+	// x.UpdateSceneFromJSON("1", string(jString))
+	// fmt.Println(x.getScene("1").summarize())
 }
