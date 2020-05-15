@@ -76,7 +76,6 @@ func (p *Project) GetSceneExport(id string) string {
 }
 
 func (p *Project) UpdateSceneFromJSON(id string, sceneJSON string) {
-
 	newScene := scene{}
 	json.Unmarshal([]byte(sceneJSON), &newScene)
 	p.SceneTree.updateSceneByID(id, newScene)

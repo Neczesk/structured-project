@@ -21,7 +21,7 @@ func (s *sceneTree) newScene(title, text string) scene {
 
 func (s *sceneTree) addScene(parent string, newScene *scene) {
 	target := s.findSceneByID(parent)
-	target.addChildScene(newScene)
+	target.addScene(newScene)
 }
 
 func (s *sceneTree) findSceneByID(search string) *scene {

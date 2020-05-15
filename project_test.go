@@ -2,6 +2,7 @@ package project
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"testing"
 )
@@ -38,9 +39,17 @@ func TestProject(t *testing.T) {
 	// } else {
 	// 	t.Error("Returned scene is nil")
 	// }
+	fmt.Println(x.summarize())
+	summary := x.getScene("1")
+	if summary != nil {
+		fmt.Println(summary.summarize())
+	} else {
+		t.Error("Returned scene is nil")
+	}
 
 	s3 := x.SceneTree.newScene("I love", "Antonia")
 	x.SceneTree.addScene(s2.ID, &s3)
 	jString, err := json.Marshal(s3)
 	x.UpdateSceneFromJSON("1", string(jString))
+	fmt.Println(x.getScene("1").summarize())
 }
