@@ -30,3 +30,18 @@ func (s *scene) asJson() string {
 	}
 	return string(result)
 }
+
+func (s *scene) addChildScene(scenedata *scene) {
+	s.Children = append(s.Children, scenedata)
+}
+
+func (s *scene) updateScene(scenedata scene) {
+	c := s.Children
+	i := s.ID
+
+	fmt.Println(s.summarize())
+	*s = scenedata
+	s.Children = c
+	s.ID = i
+	fmt.Println(s.summarize())
+}

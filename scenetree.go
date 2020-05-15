@@ -11,7 +11,7 @@ type sceneTree struct {
 }
 
 func newBlankSceneTree() sceneTree {
-	root := scene{"", "", "", make([]*scene, 0)}
+	root := scene{"", "root", "", make([]*scene, 0)}
 	return sceneTree{&root, 1}
 }
 
@@ -20,10 +20,14 @@ func (s *sceneTree) newScene(title, text string) scene {
 }
 
 func (s *sceneTree) addScene(parent string, newScene *scene) {
-
+	target := s.findSceneByID(parent)
+	target.addChildScene(newScene)
 }
 
 func (s *sceneTree) findSceneByID(search string) *scene {
+	if s.Root.ID == search {
+		return s.Root
+	}
 	queue := make([]*scene, 0)
 	queue = append(queue, s.Root)
 	for len(queue) > 0 {
@@ -42,20 +46,8 @@ func (s *sceneTree) findSceneByID(search string) *scene {
 }
 
 func (s *sceneTree) updateSceneByID(target string, scenedata scene) {
-	queue := make([]*scene, 0)
-	queue = append(queue, s.Root)
-	for len(queue) > 0 {
-		nextup := queue[0]
-		queue = queue[1:]
-		if nextup.ID == target {
-			nextup = &scenedata
-		}
-		if len(nextup.Children) > 0 {
-			for _, child := range nextup.Children {
-				queue = append(queue, child)
-			}
-		}
-	}
+	original := s.findSceneByID(target)
+	original.updateScene(scenedata)
 }
 
 //CountScenes uses a depth first tree traversal to count all scenes in the current scenetree.
@@ -101,4 +93,21 @@ func (s *sceneTree) generateID() string {
 	result := s.idCounter
 	s.idCounter++
 	return strconv.Itoa(result)
+}
+
+func (s *sceneTree) printSceneTree() string {
+	result := ""
+	queue := make([]*scene, 0)
+	queue = append(queue, s.Root)
+	for len(queue) > 0 {
+		nextup := queue[0]
+		queue = queue[1:]
+		result += nextup.ID
+		if len(nextup.Children) > 0 {
+			for _, scene := range nextup.Children {
+				queue = append(queue, scene)
+			}
+		}
+	}
+	return result
 }
